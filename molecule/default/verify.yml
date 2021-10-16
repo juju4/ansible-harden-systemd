@@ -1,0 +1,17 @@
+---
+
+- name: Verify
+  hosts: hardens
+  tasks:
+
+    - name: Get /etc/systemd/system/rsyslog.service.d/hardening.conf stats
+      stat:
+        path: /etc/systemd/system/rsyslog.service.d/hardening.conf
+      register: svc1
+    - name: Validate /etc/systemd/system/rsyslog.service.d/hardening.conf exists
+      assert:
+        that: svc1.stat.exists and svc1.stat.size != 0
+
+    - name: Get service status
+      command: systemctl status rsyslog
+      changed_when: false

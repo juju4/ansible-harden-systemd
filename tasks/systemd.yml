@@ -1,0 +1,19 @@
+---
+
+- name: Ensure systemd service.d folder exists
+  file:
+    dest: "/etc/systemd/system/{{ item }}.service.d"
+    state: directory
+    mode: '0755'
+  loop: "{{ harden_systemd_list }}"
+
+- name: Add systemd hardening options for services
+  template:
+    src: "{{ item }}.service.d-override.conf.j2"
+    dest: "/etc/systemd/system/{{ item }}.service.d/hardening.conf"
+    mode: '0644'
+  notify:
+    - reload systemd
+    # only valid if service is enabled/active
+    # - "restart {{ item }}"
+  loop: "{{ harden_systemd_list }}"

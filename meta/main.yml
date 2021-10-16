@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  role_name: harden-systemd
+  author: juju4
+  description: Enforce stricter settings for services/daemons using various systemd security options
+  license: BSD
+  min_ansible_version: 1.9
+  platforms:
+    - name: EL
+      versions:
+        - 8
+        - 7
+    - name: Ubuntu
+      versions:
+        - focal
+        - bionic
+  galaxy_tags:
+    - systemd
+    - security
+dependencies: []

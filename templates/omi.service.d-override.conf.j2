@@ -1,0 +1,52 @@
+{{ ansible_managed | comment }}
+#
+# Microsoft omi
+# https://github.com/microsoft/omi/issues/698
+#
+[Service]
+
+# Hardening
+NoNewPrivileges=yes
+PrivateTmp=true
+PrivateDevices=yes
+# PrivateUsers=yes
+ProtectHome=yes
+# ProtectSystem=strict
+ReadWritePaths=/opt/omi/lib /var/opt/omi/run
+InaccessiblePaths=/proc
+ProtectKernelTunables=true
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=yes
+RestrictSUIDSGID=yes
+MemoryDenyWriteExecute=yes
+
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+IPAccounting=yes
+# IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16
+# IPAddressDeny=
+
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+CapabilityBoundingSet=~CAP_SYS_PTRACE
+CapabilityBoundingSet=~CAP_CHOWN CAP_FSETID CAP_SETFCAP
+CapabilityBoundingSet=~CAP_DAC_* CAP_FOWNER CAP_IPC_OWNER
+CapabilityBoundingSet=~CAP_NET_ADMIN
+
+SystemCallFilter=@system-service
+# SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @privileged @resources
+SystemCallFilter=~@debug @mount @cpu-emulation @resources
+SystemCallArchitectures=native
+# When system call is disallowed, return error code instead of killing process
+SystemCallErrorNumber=EPERM
+
+CPUQuota=80%
+MemoryLimit=4G
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+---
+
+- name: Record initial state
+  shell: systemd-analyze security > /root/systemd-analyze-security1.out
+  args:
+    creates: /root/systemd-analyze-security1.out
+
+- import_tasks: systemd.yml
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Record final state
+  shell: systemd-analyze security > /root/systemd-analyze-security2.out
+  args:
+    creates: /root/systemd-analyze-security2.out
