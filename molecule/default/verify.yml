@@ -15,3 +15,4 @@
     - name: Get service status
       command: systemctl status rsyslog
       changed_when: false
+      when: ansible_service_mgr == 'systemd'
