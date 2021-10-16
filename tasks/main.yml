@@ -8,6 +8,9 @@
     - ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20
     - ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8
 
+- name: Debug | ansible_service_mgr
+  debug: var=ansible_service_mgr verbosity=1
+
 - import_tasks: systemd.yml
 
 - name: Flush handlers
