@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          path: juju4.harden-systemd
+          path: juju4.harden_systemd
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -37,7 +37,7 @@ jobs:
           ls -l /opt/hostedtoolcache/Python/3.9.1/x64/bin || true
           echo "/opt/hostedtoolcache/Python/3.9.1/x64/bin" >> $GITHUB_PATH
           ansible --version
-          cd $GITHUB_WORKSPACE/juju4.harden-systemd
+          cd $GITHUB_WORKSPACE/juju4.harden_systemd
           [ -f get-dependencies.sh ] && sh -x get-dependencies.sh
           { echo '[defaults]'; echo 'callback_whitelist = profile_tasks, timer'; echo 'roles_path = ../'; echo 'ansible_python_interpreter: /usr/bin/python3'; } >> ansible.cfg
       - name: Environment
@@ -51,16 +51,16 @@ jobs:
           systemctl status --all --no-pager || true
       - name: run test
         run: |
-          cd $GITHUB_WORKSPACE/juju4.harden-systemd && ansible-playbook -i localhost, --connection=local --become -vvv molecule/default/converge.yml
+          cd $GITHUB_WORKSPACE/juju4.harden_systemd && ansible-playbook -i localhost, --connection=local --become -vvv molecule/default/converge.yml
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
       - name: idempotency run
         run: |
-          cd $GITHUB_WORKSPACE/juju4.harden-systemd && ansible-playbook -i localhost, --connection=local --become -vvv molecule/default/converge.yml | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 1)
+          cd $GITHUB_WORKSPACE/juju4.harden_systemd && ansible-playbook -i localhost, --connection=local --become -vvv molecule/default/converge.yml | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 1)
       - name: On failure
         run: |
-          systemctl -l --no-pager status harden-systemd
+          systemctl -l --no-pager status
         if: env.WORKFLOW_CONCLUSION == 'failure'  # notify only if failure
       - name: After script - systemctl
         run: |

@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: harden-systemd
+  role_name: harden_systemd
   author: juju4
   description: Enforce stricter settings for services/daemons using various systemd security options
   license: BSD
