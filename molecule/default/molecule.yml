@@ -15,7 +15,6 @@ platforms:
     privileged: True
     volume_mounts:
       - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    command: "/usr/sbin/init"
     environment: { container: docker }
     # env:
     #   http_proxy: ${http_proxy}
