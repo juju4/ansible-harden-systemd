@@ -1,5 +1,5 @@
 ---
-name: AnsibleCI
+name: default-bare
 
 on:
   push:
@@ -47,8 +47,8 @@ jobs:
           find -ls
       - name: Before script - systemctl
         run: |
-          systemctl status --all --no-pager || true
           systemd-analyze security || true
+          systemctl status --all --no-pager || true
       - name: run test
         run: |
           cd $GITHUB_WORKSPACE/juju4.harden-systemd && ansible-playbook -i localhost, --connection=local --become -vvv molecule/default/converge.yml
@@ -64,7 +64,7 @@ jobs:
         if: env.WORKFLOW_CONCLUSION == 'failure'  # notify only if failure
       - name: After script - systemctl
         run: |
-          systemctl status --all --no-pager || true
           systemd-analyze security || true
           systemctl --failed || true
+          systemctl status --all --no-pager || true
         continue-on-error: true
