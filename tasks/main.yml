@@ -4,6 +4,9 @@
   shell: systemd-analyze security > /root/systemd-analyze-security1.out
   args:
     creates: /root/systemd-analyze-security1.out
+  when:
+    - ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20
+    - ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8
 
 - import_tasks: systemd.yml
 
@@ -14,3 +17,6 @@
   shell: systemd-analyze security > /root/systemd-analyze-security2.out
   args:
     creates: /root/systemd-analyze-security2.out
+  when:
+    - ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20
+    - ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8
