@@ -12,7 +12,14 @@
       assert:
         that: svc1.stat.exists and svc1.stat.size != 0
 
+    - name: Debug | ansible_service_mgr
+      debug: var=ansible_service_mgr verbosity=1
+
     - name: Get service status
       command: systemctl status rsyslog
       changed_when: false
-      when: ansible_service_mgr == 'systemd'
+      when: >
+        ansible_service_mgr == 'systemd' and
+        not (ansible_virtualization_type is defined and
+              (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+            )
