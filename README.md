@@ -6,7 +6,8 @@
 Enforce stricter settings for services/daemons using various systemd security options.
 This mostly focused on network services.
 
-Warning: Test to your context and adapt else it can break things.
+Warning: Test to your context and adapt else it can break things, especially more for cloud agents which can have very large functions.
+At minimum, service should start.
 
 ## Requirements & Dependencies
 
@@ -64,7 +65,13 @@ $ MOLECULE_DISTRO=ubuntu:20.04 molecule test --destroy=never
 
 ## Troubleshooting & Known issues
 
-N/A
+* intermittent 'rsyslog.service: Preparation of eBPF allow maps failed: Operation not permitted'
+May try with
+```
+AmbientCapabilities=CAP_BPF CAP_PERFMON
+```
+and restarting service with a `systemctl daemon-reload` before.
+Still not clear why some service would need eBPF.
 
 ## License
 
