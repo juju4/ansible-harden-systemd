@@ -1,0 +1,126 @@
+{{ ansible_managed | comment }}
+#
+# /etc/systemd/system/polkit.service.d/hardening.conf
+#
+# Dependency: dbus
+# Exposure 9.6 -> 2.0
+[Service]
+##############
+# Networking #
+##############
+
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_UNIX
+RestrictAddressFamilies=~AF_INET AF_INET6 AF_NETLINK AF_PACKET
+IPAccounting=yes
+# IPAddressAllow=any
+# IPAddressDeny= service needs access to all IPs
+
+###############
+# File system #
+###############
+#  Note that the effect of these settings may be undone by privileged processes. In order to
+#  set up an effective sandboxed environment for a unit it is thus recommended to combine
+#  these settings with either CapabilityBoundingSet=~CAP_SYS_ADMIN or
+#  SystemCallFilter=~@mount.
+
+ProtectHome=yes
+ProtectSystem=strict
+{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
+ProtectProc=ptraceable
+{% endif %}
+# ReadWritePaths=
+PrivateTmp=yes
+
+###################
+# User separation #
+###################
+
+# PrivateUsers= service runs as root
+# DynamicUser= service runs as root
+
+###########
+# Devices #
+###########
+
+PrivateDevices=yes
+# DeviceAllow=/dev/exampledevice
+
+##########
+# Kernel #
+##########
+
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+%}
+ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+{% endif %}
+
+########
+# Misc #
+########
+
+UMask=077
+
+# polkit.service: Preparation of eBPF accounting maps failed: Operation not permitted
+AmbientCapabilities=CAP_BPF CAP_PERFMON
+CapabilityBoundingSet=~CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_DAC_READ_SEARCH
+CapabilityBoundingSet=~CAP_SYS_RAWIO
+CapabilityBoundingSet=~CAP_SYS_PTRACE
+CapabilityBoundingSet=~CAP_DAC_* CAP_FOWNER CAP_IPC_OWNER
+CapabilityBoundingSet=~CAP_NET_ADMIN
+CapabilityBoundingSet=~CAP_KILL
+CapabilityBoundingSet=~CAP_NET_BIND_SERVICE CAP_NET_BROADCAST
+CapabilityBoundingSet=~CAP_SYS_NICE CAP_SYS_RESOURCE
+CapabilityBoundingSet=~CAP_SYS_BOOT
+CapabilityBoundingSet=~CAP_LINUX_IMMUTABLE
+CapabilityBoundingSet=~CAP_SYS_CHROOT
+CapabilityBoundingSet=~CAP_BLOCK_SUSPEND
+CapabilityBoundingSet=~CAP_LEASE
+CapabilityBoundingSet=~CAP_SYS_PACCT
+CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+# CapabilityBoundingSet=~CAP_SETUID CAP_SETGID CAP_SETPCAP
+CapabilityBoundingSet=~CAP_CHOWN CAP_FSETID CAP_SETFCAP
+CapabilityBoundingSet=~CAP_NET_RAW
+CapabilityBoundingSet=~CAP_IPC_LOCK
+
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+%}
+NoNewPrivileges=yes
+{% elif (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 8 ) %}
+# NoNewPrivileges=yes
+{% endif %}
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+%}
+MemoryDenyWriteExecute=yes
+{% elif (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 8 ) %}
+# MemoryDenyWriteExecute=yes
+{% endif %}
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+# RemoveIPC= service runs as root
+
+################
+# System calls #
+################
+
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+%}
+SystemCallFilter=@system-service @resources
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @module @privileged
+{% elif (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 8 ) %}
+SystemCallFilter=@system-service @resources @privileged
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @module
+{% endif %}
+SystemCallArchitectures=native
