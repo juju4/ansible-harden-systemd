@@ -27,9 +27,13 @@ ReadOnlyPaths=/proc/kmsg
 {% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 7) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
 ProtectKernelTunables=true
 ProtectKernelModules=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+%}
 ProtectKernelLogs=yes
 ProtectHostname=yes
 ProtectClock=yes
+{% endif %}
 ProtectControlGroups=true
 LockPersonality=true
 RestrictRealtime=true
@@ -75,8 +79,8 @@ CapabilityBoundingSet=~CAP_IPC_LOCK
         ) and
       not (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int < 8) %}
 {% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
-SystemCallFilter=@system-service @privileged
-SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @resources @clock @swap @reboot @module
+SystemCallFilter=@system-service @privileged @resources
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @module
 SystemCallArchitectures=native
 # When system call is disallowed, return error code instead of killing process
 SystemCallErrorNumber=EPERM

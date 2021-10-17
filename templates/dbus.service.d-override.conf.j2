@@ -50,7 +50,13 @@ PrivateDevices=yes
 
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+%}
 ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+{% endif %}
 
 ########
 # Misc #
@@ -58,7 +64,8 @@ ProtectKernelLogs=yes
 
 UMask=077
 
-# AmbientCapabilities= service runs as root
+# Preparation of eBPF accounting maps failed: Operation not permitted?
+AmbientCapabilities=CAP_BPF CAP_PERFMON
 CapabilityBoundingSet=~CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_DAC_READ_SEARCH
 CapabilityBoundingSet=~CAP_SYS_RAWIO
 CapabilityBoundingSet=~CAP_SYS_PTRACE
@@ -81,8 +88,6 @@ CapabilityBoundingSet=~CAP_NET_RAW
 CapabilityBoundingSet=~CAP_IPC_LOCK
 
 NoNewPrivileges=yes
-ProtectHostname=yes
-ProtectClock=yes
 ProtectControlGroups=yes
 RestrictNamespaces=yes
 LockPersonality=yes

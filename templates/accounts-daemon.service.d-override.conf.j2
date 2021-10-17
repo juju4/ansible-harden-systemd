@@ -61,7 +61,8 @@ ProtectKernelLogs=yes
 
 UMask=077
 
-# AmbientCapabilities= service runs as root
+# Preparation of eBPF accounting maps failed: Operation not permitted?
+AmbientCapabilities=CAP_BPF CAP_PERFMON
 CapabilityBoundingSet=~CAP_SYS_ADMIN
 CapabilityBoundingSet=~CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_DAC_READ_SEARCH
 CapabilityBoundingSet=~CAP_SYS_RAWIO
