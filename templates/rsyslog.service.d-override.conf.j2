@@ -78,8 +78,10 @@ CapabilityBoundingSet=~CAP_IPC_LOCK
           (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
         ) and
       not (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int < 8) %}
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
+{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20) %}
 SystemCallFilter=@system-service @privileged @resources
+{% endif %}
+{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
 SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @module
 SystemCallArchitectures=native
 # When system call is disallowed, return error code instead of killing process

@@ -20,7 +20,7 @@
   service: name=dbus state=restarted
   # Operation refused, unit dbus.service may be requested by dependency only (it is configured to refuse manual start/stop).
   when: >
-    not (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) and
+    not (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 18) and
     ansible_service_mgr == 'systemd' and
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")

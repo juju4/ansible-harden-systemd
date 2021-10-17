@@ -53,7 +53,12 @@ PrivateDevices=yes
 
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
+{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20 %}
 ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+MemoryDenyWriteExecute=yes
+{% endif %}
 
 ########
 # Misc #
@@ -82,18 +87,17 @@ CapabilityBoundingSet=~CAP_LEASE
 CapabilityBoundingSet=~CAP_SYS_PACCT
 CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
 CapabilityBoundingSet=~CAP_SYS_ADMIN
+{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20 %}
 CapabilityBoundingSet=~CAP_SETGID CAP_SETPCAP
+{% endif %}
 CapabilityBoundingSet=~CAP_CHOWN CAP_FSETID CAP_SETFCAP
 CapabilityBoundingSet=~CAP_NET_RAW
 CapabilityBoundingSet=~CAP_IPC_LOCK
 
 NoNewPrivileges=yes
-ProtectHostname=yes
-ProtectClock=yes
 ProtectControlGroups=yes
 RestrictNamespaces=yes
 LockPersonality=yes
-MemoryDenyWriteExecute=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 # RemoveIPC= service runs as root
@@ -102,6 +106,8 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
+{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20 %}
 SystemCallFilter=@system-service @resources @privileged
 SystemCallFilter=~@debug @mount @reboot @swap @raw-io @clock @module @obsolete
+{% endif %}
 SystemCallArchitectures=native
