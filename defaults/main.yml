@@ -8,7 +8,7 @@ harden_systemd_list:
   - rsync
   - rsyslog
   # defaults Ubuntu 21.04, does not exist on 18.04
-  - packagekit
+  # - packagekit
   #
   # pinephone
   # - phosh
