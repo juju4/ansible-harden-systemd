@@ -1,9 +1,10 @@
 ---
 
+# defaults Ubuntu 20.04
 harden_systemd_list:
-  # defaults Ubuntu 20.04
   - accounts-daemon
   - dbus
+  - polkit
   - rsync
   - rsyslog
   # defaults Ubuntu 21.04
@@ -11,11 +12,24 @@ harden_systemd_list:
   #
   # pinephone
   # - phosh
+  # - NetworkManager
   # non-default
-  - avahi-daemon
-  - bluetooth
-  - NetworkManager
-  - wpa_supplicant
+  # - avahi-daemon
+  # - bluetooth
+  # - wpa_supplicant
   # cloud agents
   - do-agent
   # - omi
+  # - walinuxagent
+
+# Ubuntu: service is disabled by default
+harden_systemd_rsync_enable: false
+
+## if Centos8
+# harden_systemd_list:
+#  - dbus
+#  - polkit
+#  - rsyslog
+#  - packagekit
+#  - NetworkManager
+#  # + cloud agents
