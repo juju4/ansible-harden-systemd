@@ -18,7 +18,7 @@ harden_systemd_list:
   # - bluetooth
   # - wpa_supplicant
   # cloud agents
-  - do-agent
+  # - do-agent
   # - omi
   # - walinuxagent
 
