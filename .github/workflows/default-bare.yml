@@ -66,5 +66,22 @@ jobs:
         run: |
           systemd-analyze security || true
           systemctl --failed || true
+          systemctl status accounts-daemon || true
+          systemctl status dbus || true
+          systemctl status rsync || true
+          systemctl status rsyslog || true
+          systemctl status walinuxagent || true
+          systemctl status --all --no-pager || true
+        continue-on-error: true
+      - name: After script - systemctl2
+        run: |
+          sleep 30
+          systemd-analyze security || true
+          systemctl --failed || true
+          systemctl status accounts-daemon || true
+          systemctl status dbus || true
+          systemctl status rsync || true
+          systemctl status rsyslog || true
+          systemctl status walinuxagent || true
           systemctl status --all --no-pager || true
         continue-on-error: true
