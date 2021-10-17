@@ -87,3 +87,8 @@ jobs:
           systemctl status --all --no-pager || true
         if: ${{ always() }}
         continue-on-error: true
+      - name: After script - resulting config
+        run: |
+          find /etc/systemd/system/*.service.d/ -type f -exec cat {} \;
+        if: ${{ always() }}
+        continue-on-error: true
