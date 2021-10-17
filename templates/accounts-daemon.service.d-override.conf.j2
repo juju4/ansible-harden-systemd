@@ -61,8 +61,10 @@ ProtectKernelLogs=yes
 
 UMask=077
 
+{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20 %}
 # Preparation of eBPF accounting maps failed: Operation not permitted?
 AmbientCapabilities=CAP_BPF CAP_PERFMON
+{% endif %}
 CapabilityBoundingSet=~CAP_SYS_ADMIN
 CapabilityBoundingSet=~CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_DAC_READ_SEARCH
 CapabilityBoundingSet=~CAP_SYS_RAWIO
