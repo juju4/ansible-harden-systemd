@@ -19,6 +19,5 @@
     mode: '0644'
   notify:
     - reload systemd
-    # only valid if service is enabled/active
-    # - "restart {{ item }}"
+    - "restart {{ item }}"
   loop: "{{ harden_systemd_list }}"
