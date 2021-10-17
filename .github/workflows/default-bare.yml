@@ -72,6 +72,7 @@ jobs:
           systemctl status rsyslog || true
           systemctl status walinuxagent || true
           systemctl status --all --no-pager || true
+        if: ${{ always() }}
         continue-on-error: true
       - name: After script - systemctl2
         run: |
@@ -84,4 +85,5 @@ jobs:
           systemctl status rsyslog || true
           systemctl status walinuxagent || true
           systemctl status --all --no-pager || true
+        if: ${{ always() }}
         continue-on-error: true
