@@ -10,8 +10,13 @@
   args:
     creates: /root/systemd-analyze-security1.out
   when: >
-    (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-    (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8)
+    ((ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+     (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8)
+    ) and
+    ansible_service_mgr == 'systemd' and
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+        )
 
 - name: Debug | ansible_service_mgr
   debug: var=ansible_service_mgr verbosity=1
@@ -26,5 +31,10 @@
   args:
     creates: /root/systemd-analyze-security2.out
   when: >
-    (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-    (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8)
+    ((ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+     (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8)
+    ) and
+    ansible_service_mgr == 'systemd' and
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+        )
