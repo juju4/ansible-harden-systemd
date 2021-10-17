@@ -1,5 +1,10 @@
 ---
 
+- name: Ensure systemd package is present
+  package:
+    name: systemd
+    state: present
+
 - name: Record initial state
   shell: systemd-analyze security > /root/systemd-analyze-security1.out
   args:
