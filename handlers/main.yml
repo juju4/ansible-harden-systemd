@@ -8,3 +8,35 @@
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
+
+- name: restart accounts-daemon
+  service: name=accounts-daemon state=restarted
+- name: restart dbus
+  service: name=dbus state=restarted
+  # Operation refused, unit dbus.service may be requested by dependency only (it is configured to refuse manual start/stop).
+  when:  not (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20)
+- name: restart polkit
+  service: name=polkit state=restarted
+- name: restart rsync
+  service: name=rsync state=restarted
+  when: harden_systemd_rsync_enable
+- name: restart rsyslog
+  service: name=rsyslog state=restarted
+- name: restart packagekit
+  service: name=packagekit state=restarted
+- name: restart phosh
+  service: name=phosh state=restarted
+- name: restart avahi-daemon
+  service: name=avahi-daemon state=restarted
+- name: restart bluetooth
+  service: name=bluetooth state=restarted
+- name: restart NetworkManager
+  service: name=NetworkManager state=restarted
+- name: restart wpa_supplicant
+  service: name=wpa_supplicant state=restarted
+- name: restart do-agent
+  service: name=do-agent state=restarted
+- name: restart omi
+  service: name=omi state=restarted
+- name: restart walinuxagent
+  service: name=walinuxagent state=restarted
