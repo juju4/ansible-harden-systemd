@@ -1,9 +1,5 @@
 ---
 
-- debug: var=ansible_distribution
-- debug: var=ansible_distribution_major_version
-- debug: var=ansible_distribution_release
-
 - name: Ensure systemd package is present
   package:
     name: systemd
