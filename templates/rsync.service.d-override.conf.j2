@@ -97,7 +97,12 @@ RestrictRealtime=yes
 RestrictSUIDSGID=yes
 # RemoveIPC=
 
+{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or
+      (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
 SystemCallFilter=@system-service @privileged @mount
+{% endif %}
 SystemCallFilter=~@clock @debug @resources @reboot @swap @module
 SystemCallArchitectures=native
 
