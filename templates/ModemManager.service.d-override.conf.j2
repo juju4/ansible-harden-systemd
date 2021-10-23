@@ -1,0 +1,101 @@
+{{ ansible_managed | comment }}
+#
+# /etc/systemd/system/ModemManager.service.d/hardening.conf
+#
+# Exposure 6.3 -> 7
+# https://gitlab.freedesktop.org/mobile-broadband/ModemManager/-/blob/master/data/ModemManager.service.in
+[Service]
+##############
+# Networking #
+##############
+
+# PrivateNetwork= service needs access to host network
+RestrictAddressFamilies=AF_NETLINK AF_UNIX AF_QIPCRTR
+IPAccounting=yes
+# IPAddressAllow=any
+# IPAddressDeny= service needs access to all IPs
+
+###############
+# File system #
+###############
+#  Note that the effect of these settings may be undone by privileged processes. In order to
+#  set up an effective sandboxed environment for a unit it is thus recommended to combine
+#  these settings with either CapabilityBoundingSet=~CAP_SYS_ADMIN or
+#  SystemCallFilter=~@mount.
+
+ProtectHome=yes
+ProtectSystem=strict
+{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
+ProtectProc=ptraceable
+{% endif %}
+# ReadOnlyPaths=
+# dns-mgr: could not commit DNS changes: Failed to create file “/etc/resolv.conf.ZWQVB1”: Read-only file system
+# dhcp4 (wlan0): error saving lease to /var/lib/NetworkManager/internal-0aeb441d-c231-4753-9216-057df4ec38f9-wlan0.lease:
+# Failed to set up mount namespacing: /run/systemd/unit-root/run/NetworkManager: No such file or directory
+#ReadWritePaths=/etc /var/lib/NetworkManager /run/NetworkManager /run/network /run/systemd/unit-root/run/NetworkManager /proc/sys/net
+ReadWritePaths=/etc /var/lib/NetworkManager /run
+PrivateTmp=yes
+
+###################
+# User separation #
+###################
+
+# PrivateUsers= service runs as root
+# DynamicUser= service runs as root
+
+###########
+# Devices #
+###########
+
+PrivateDevices=yes
+# DeviceAllow=/dev/exampledevice
+
+##########
+# Kernel #
+##########
+
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
+ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+{% endif %}
+
+########
+# Misc #
+########
+
+UMask=077
+
+CapabilityBoundingSet=CAP_SYS_ADMIN CAP_NET_ADMIN
+
+# AmbientCapabilities= service runs as root
+NoNewPrivileges=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+# RemoveIPC= service runs as root
+
+################
+# System calls #
+################
+
+{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8 ) %}
+SystemCallFilter=@system-service
+#SystemCallFilter=~@resources @privileged
+{% elif (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA') %}{# Bookworm #}
+SystemCallFilter=@system-service @resources
+#SystemCallFilter=~@privileged
+{% endif %}
+SystemCallArchitectures=native
+
+CPUShares={{ NetworkManager_cgroups_cpushares | default('1024') }}
+CPUQuota={{ NetworkManager_cgroups_cpuquota | default('20%') }}
+MemoryLimit={{ NetworkManager_cgroups_memorylimit | default('1G') }}
