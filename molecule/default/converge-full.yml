@@ -56,5 +56,6 @@
       - rsyslog
       - iio-sensor-proxy
       - fwupd
+      - walinuxagent
   roles:
     - juju4.harden_systemd
