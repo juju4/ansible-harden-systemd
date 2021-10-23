@@ -73,6 +73,14 @@ AmbientCapabilities=CAP_BPF CAP_PERFMON
 and restarting service with a `systemctl daemon-reload` before.
 Still not clear why some service would need eBPF.
 
+* To apply changes, either enable task notify in systemd.yml, either do manual way (service by service or system restart). It seems there is a bug in ansible notify mechanism when used with loop making few items change triggering a notification for all items.
+
+## References
+
+* https://www.freedesktop.org/software/systemd/man/systemd.exec.html
+* https://wiki.debian.org/ServiceSandboxing
+* https://github.com/krathalan/systemd-sandboxing/
+
 ## License
 
 BSD 2-clause
