@@ -1,7 +1,10 @@
 {{ ansible_managed | comment }}
 #
+# /etc/systemd/system/NetworkManager.service.d/hardening.conf
+#
 # https://github.com/krathalan/systemd-sandboxing/blob/master/NetworkManager.service.d/hardening.conf
 # Exposure 7.8 -> 2.4
+# https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/blob/main/data/NetworkManager-dispatcher.service.in
 [Service]
 ##############
 # Networking #
@@ -9,7 +12,7 @@
 
 # PrivateNetwork= service needs access to host network
 RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_PACKET AF_UNIX
-# IPAccounting=yes
+IPAccounting=yes
 # IPAddressAllow=any
 # IPAddressDeny= service needs access to all IPs
 
@@ -23,10 +26,17 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_PACKET AF_UNIX
 
 ProtectHome=yes
 ProtectSystem=strict
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
 ProtectProc=ptraceable
 {% endif %}
-ReadWritePaths=/etc /run/NetworkManager/ -/proc/sys/net -/var/lib/NetworkManager/
+# ReadOnlyPaths=
+# dns-mgr: could not commit DNS changes: Failed to create file “/etc/resolv.conf.ZWQVB1”: Read-only file system
+# dhcp4 (wlan0): error saving lease to /var/lib/NetworkManager/internal-0aeb441d-c231-4753-9216-057df4ec38f9-wlan0.lease:
+# Failed to set up mount namespacing: /run/systemd/unit-root/run/NetworkManager: No such file or directory
+#ReadWritePaths=/etc /var/lib/NetworkManager /run/NetworkManager /run/network /run/systemd/unit-root/run/NetworkManager /proc/sys/net
+ReadWritePaths=/etc /var/lib/NetworkManager /run
 PrivateTmp=yes
 
 ###################
@@ -50,7 +60,8 @@ PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
 %}
 ProtectKernelLogs=yes
 ProtectHostname=yes
@@ -62,7 +73,28 @@ ProtectClock=yes
 ########
 
 UMask=077
-CapabilityBoundingSet=~CAP_SYS_ADMIN CAP_SETUID CAP_SETGID CAP_SYS_CHROOT
+
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+CapabilityBoundingSet=~CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_DAC_READ_SEARCH
+CapabilityBoundingSet=~CAP_SYS_RAWIO
+CapabilityBoundingSet=~CAP_SYS_PTRACE
+CapabilityBoundingSet=~CAP_DAC_* CAP_FOWNER CAP_IPC_OWNER
+# CapabilityBoundingSet=~CAP_NET_ADMIN
+CapabilityBoundingSet=~CAP_KILL
+# CapabilityBoundingSet=~CAP_NET_BIND_SERVICE CAP_NET_BROADCAST
+CapabilityBoundingSet=~CAP_SYS_NICE CAP_SYS_RESOURCE
+CapabilityBoundingSet=~CAP_SYS_BOOT
+CapabilityBoundingSet=~CAP_LINUX_IMMUTABLE
+CapabilityBoundingSet=~CAP_SYS_CHROOT
+CapabilityBoundingSet=~CAP_BLOCK_SUSPEND
+# CapabilityBoundingSet=~CAP_LEASE
+CapabilityBoundingSet=~CAP_SYS_PACCT
+CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
+CapabilityBoundingSet=~CAP_SETUID CAP_SETGID CAP_SETPCAP
+CapabilityBoundingSet=~CAP_CHOWN CAP_FSETID CAP_SETFCAP
+# CapabilityBoundingSet=~CAP_NET_RAW
+CapabilityBoundingSet=~CAP_IPC_LOCK
+
 # AmbientCapabilities= service runs as root
 NoNewPrivileges=yes
 ProtectControlGroups=yes
@@ -77,6 +109,15 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
+{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8 ) %}
 SystemCallFilter=@system-service
 SystemCallFilter=~@resources @privileged
+{% elif (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA') %}{# Bookworm #}
+SystemCallFilter=@system-service @resources
+SystemCallFilter=~@privileged
+{% endif %}
 SystemCallArchitectures=native
+
+CPUShares={{ NetworkManager_cgroups_cpushares | default('1024') }}
+CPUQuota={{ NetworkManager_cgroups_cpuquota | default('20%') }}
+MemoryLimit={{ NetworkManager_cgroups_memorylimit | default('1G') }}

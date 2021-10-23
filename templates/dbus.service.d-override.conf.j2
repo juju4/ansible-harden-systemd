@@ -1,5 +1,7 @@
 {{ ansible_managed | comment }}
 #
+# /etc/systemd/system/dbus.service.d/hardening.conf
+#
 # Note: a system reboot is needed to apply for dbus as 'unit dbus.service may be requested by dependency only (it is configured to refuse manual start/stop).'
 # Exposure 9.6 -> 3.0
 [Service]
@@ -105,3 +107,7 @@ RestrictSUIDSGID=yes
 #SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @resources @clock @swap @reboot @module
 SystemCallFilter=~@raw-io
 SystemCallArchitectures=native
+
+CPUShares={{ dbus_cgroups_cpushares | default('1024') }}
+CPUQuota={{ dbus_cgroups_cpuquota | default('20%') }}
+MemoryLimit={{ dbus_cgroups_memorylimit | default('1G') }}

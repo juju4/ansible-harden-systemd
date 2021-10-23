@@ -1,8 +1,11 @@
 {{ ansible_managed | comment }}
 #
+# /etc/systemd/system/accounts-daemon.service.d/hardening.conf
+#
 # Mobian: ?
 # Manjaro: disabled/inactive
 # Ubuntu: default active
+# https://gitlab.gnome.org/GNOME/gnome-online-accounts/-/blob/master/data/org.gnome.OnlineAccounts.service.in ?
 [Service]
 ##############
 # Networking #
@@ -53,7 +56,10 @@ PrivateDevices=yes
 
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20 %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
 ProtectKernelLogs=yes
 ProtectHostname=yes
 ProtectClock=yes
@@ -86,7 +92,6 @@ CapabilityBoundingSet=~CAP_BLOCK_SUSPEND
 CapabilityBoundingSet=~CAP_LEASE
 CapabilityBoundingSet=~CAP_SYS_PACCT
 CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
-CapabilityBoundingSet=~CAP_SYS_ADMIN
 {% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20 %}
 CapabilityBoundingSet=~CAP_SETGID CAP_SETPCAP
 {% endif %}
@@ -98,6 +103,7 @@ NoNewPrivileges=yes
 ProtectControlGroups=yes
 RestrictNamespaces=yes
 LockPersonality=yes
+MemoryDenyWriteExecute=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 # RemoveIPC= service runs as root
@@ -106,7 +112,10 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20 %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
 SystemCallFilter=@system-service @resources @privileged
 SystemCallFilter=~@debug @mount @reboot @swap @raw-io @clock @module @obsolete
 {% endif %}

@@ -87,8 +87,7 @@ SystemCallErrorNumber=EPERM
 
 {% endif %}
 {% endif %}
-{% if doagent_cgroups_restriction_enable is defined and doagent_cgroups_restriction_enable|bool %}
+
 CPUShares={{ doagent_cgroups_cpushares | default('1024') }}
 CPUQuota={{ doagent_cgroups_cpuquota | default('10%') }}
 MemoryLimit={{ doagent_cgroups_memorylimit | default('1G') }}
-{% endif %}

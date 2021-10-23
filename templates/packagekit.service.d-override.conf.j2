@@ -113,6 +113,7 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
-SystemCallFilter=@system-service @resources
-SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @module @privileged
+# pkcon seems to require @privileged
+SystemCallFilter=@system-service @resources @privileged
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @module
 SystemCallArchitectures=native
