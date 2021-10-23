@@ -50,7 +50,14 @@ PrivateDevices=yes
 
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
 ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+{% endif %}
 
 ########
 # Misc #
@@ -85,8 +92,6 @@ CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
 # AmbientCapabilities=
 
 NoNewPrivileges=yes
-ProtectHostname=yes
-ProtectClock=yes
 ProtectControlGroups=yes
 RestrictNamespaces=yes
 LockPersonality=yes
@@ -99,6 +104,11 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
+{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or
+      (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
 SystemCallFilter=@system-service @mount @privileged
+{% endif %}
 SystemCallFilter=~@clock @debug @resources @reboot @swap @module
 SystemCallArchitectures=native

@@ -48,7 +48,14 @@ DeviceAllow=/dev/uinput rw
 
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
 ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+{% endif %}
 
 ########
 # Misc #
@@ -57,8 +64,6 @@ ProtectKernelLogs=yes
 # CapabilityBoundingSet= already specified in packaged unit file
 # AmbientCapabilities= service runs as root
 NoNewPrivileges=yes
-ProtectHostname=yes
-ProtectClock=yes
 ProtectControlGroups=yes
 RestrictNamespaces=yes
 LockPersonality=yes
@@ -71,7 +76,12 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
+{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or
+      (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20) or
+      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+%}
 SystemCallFilter=@system-service
+{% endif %}
 SystemCallFilter=~@resources @privileged
 SystemCallArchitectures=native
 
