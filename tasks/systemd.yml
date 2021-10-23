@@ -19,5 +19,6 @@
     mode: '0644'
   notify:
     - reload systemd
-    - "restart {{ item }}"
+    # FIXME! this notify all items in the loops, not just the ones with change
+    # - "restart {{ item }}"
   loop: "{{ harden_systemd_list }}"

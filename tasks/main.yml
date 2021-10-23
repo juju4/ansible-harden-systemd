@@ -1,5 +1,9 @@
 ---
 
+- debug: var=ansible_distribution
+- debug: var=ansible_distribution_major_version
+- debug: var=ansible_distribution_release
+
 - name: Ensure systemd package is present
   package:
     name: systemd
@@ -11,7 +15,8 @@
     creates: /root/systemd-analyze-security1.out
   when: >
     ((ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-     (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8)
+     (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or
+     (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
     ) and
     ansible_service_mgr == 'systemd' and
     not (ansible_virtualization_type is defined and
@@ -32,7 +37,8 @@
     creates: /root/systemd-analyze-security2.out
   when: >
     ((ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-     (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8)
+     (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or
+     (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
     ) and
     ansible_service_mgr == 'systemd' and
     not (ansible_virtualization_type is defined and
