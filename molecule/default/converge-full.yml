@@ -44,17 +44,17 @@
       when: ansible_distribution == "Ubuntu"
   vars:
     harden_systemd_list:
-     - accounts-daemon
-     - dbus
-     - rsync
-     - packagekit
-     - polkit
-     - avahi-daemon
-     - bluetooth
-     - ModemManager
-     - wpa_supplicant
-     - rsyslog
-     - iio-sensor-proxy
-     - fwupd
+      - accounts-daemon
+      - dbus
+      - rsync
+      - packagekit
+      - polkit
+      - avahi-daemon
+      - bluetooth
+      - ModemManager
+      - wpa_supplicant
+      - rsyslog
+      - iio-sensor-proxy
+      - fwupd
   roles:
     - juju4.harden_systemd
