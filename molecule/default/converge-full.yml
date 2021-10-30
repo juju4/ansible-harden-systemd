@@ -41,6 +41,8 @@
           - iio-sensor-proxy
           - fwupd
         state: present
+      register: pkg_result
+      until: pkg_result is success
       when: ansible_distribution == "Ubuntu"
   vars:
     harden_systemd_list:
