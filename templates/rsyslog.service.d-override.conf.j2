@@ -2,6 +2,8 @@
 #
 # /etc/systemd/system/rsyslog.service.d/hardening.conf
 #
+# FIXME!
+# rsyslog.service: Preparation of eBPF allow maps failed: Operation not permitted
 [Service]
 # Hardening
 # Warning! Test to your context
@@ -91,6 +93,6 @@ SystemCallErrorNumber=EPERM
 {% endif %}
 {% if rsyslog_cgroups_restriction_enable is defined and rsyslog_cgroups_restriction_enable|bool %}
 CPUShares={{ rsyslog_cgroups_cpushares | default('1024') }}
-CPUQuota={{ rsyslog_cgroups_cpuquota | default('20%') }}
+CPUQuota={{ rsyslog_cgroups_cpuquota | default('40%') }}
 MemoryLimit={{ rsyslog_cgroups_memorylimit | default('4G') }}
 {% endif %}

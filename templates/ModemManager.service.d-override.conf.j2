@@ -29,11 +29,7 @@ ProtectSystem=strict
 ProtectProc=ptraceable
 {% endif %}
 # ReadOnlyPaths=
-# dns-mgr: could not commit DNS changes: Failed to create file “/etc/resolv.conf.ZWQVB1”: Read-only file system
-# dhcp4 (wlan0): error saving lease to /var/lib/NetworkManager/internal-0aeb441d-c231-4753-9216-057df4ec38f9-wlan0.lease:
-# Failed to set up mount namespacing: /run/systemd/unit-root/run/NetworkManager: No such file or directory
-#ReadWritePaths=/etc /var/lib/NetworkManager /run/NetworkManager /run/network /run/systemd/unit-root/run/NetworkManager /proc/sys/net
-ReadWritePaths=/etc /var/lib/NetworkManager /run
+# ReadWritePaths=
 PrivateTmp=yes
 
 ###################
@@ -87,7 +83,9 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8 ) %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8)
+%}
 SystemCallFilter=@system-service
 #SystemCallFilter=~@resources @privileged
 {% elif (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA') %}{# Bookworm #}

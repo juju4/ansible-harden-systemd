@@ -109,7 +109,9 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8 ) %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8)
+%}
 SystemCallFilter=@system-service
 SystemCallFilter=~@resources @privileged
 {% elif (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA') %}{# Bookworm #}

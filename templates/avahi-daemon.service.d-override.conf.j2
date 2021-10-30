@@ -2,7 +2,12 @@
 #
 # /etc/systemd/system/avahi-daemon.service.d/hardening.conf
 #
-# Exposure 9.6 -> 3.0
+# Exposure 9.6 -> 5.1
+# https://github.com/lathiat/avahi/blob/master/avahi-daemon/avahi-daemon.service.in
+#
+# FIXME!
+# Preparation of eBPF accounting maps failed: Operation not permitted
+# PF allow maps failed: Operation not permitted
 [Service]
 ##############
 # Networking #
@@ -22,13 +27,13 @@ IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16
 #  these settings with either CapabilityBoundingSet=~CAP_SYS_ADMIN or
 #  SystemCallFilter=~@mount.
 
-ProtectHome=yes
-ProtectSystem=strict
+# ProtectHome=yes
+# ProtectSystem=strict
 {% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
 # ProtectProc=ptraceable
 {% endif %}
-ReadWritePaths=/run/avahi-daemon
-PrivateTmp=yes
+# ReadWritePaths=/run/avahi-daemon
+# PrivateTmp=yes
 
 ###################
 # User separation #
@@ -41,20 +46,20 @@ PrivateTmp=yes
 # Devices #
 ###########
 
-PrivateDevices=yes
+# PrivateDevices=yes
 # DeviceAllow=
 
 ##########
 # Kernel #
 ##########
 
-ProtectKernelTunables=yes
-ProtectKernelModules=yes
+# ProtectKernelTunables=yes
+# ProtectKernelModules=yes
 {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
       (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8) or
       (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
 %}
-ProtectKernelLogs=yes
+# ProtectKernelLogs=yes
 ProtectHostname=yes
 ProtectClock=yes
 {% endif %}
@@ -66,7 +71,6 @@ ProtectClock=yes
 UMask=077
 
 {% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20 %}
-# Preparation of eBPF accounting maps failed: Operation not permitted?
 AmbientCapabilities=CAP_BPF CAP_PERFMON
 {% endif %}
 # CapabilityBoundingSet=~CAP_SETUID CAP_SETGID CAP_SETPCAP
@@ -92,7 +96,7 @@ CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
 # AmbientCapabilities=
 
 NoNewPrivileges=yes
-ProtectControlGroups=yes
+# ProtectControlGroups=yes
 RestrictNamespaces=yes
 LockPersonality=yes
 MemoryDenyWriteExecute=yes

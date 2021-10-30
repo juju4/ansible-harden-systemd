@@ -4,6 +4,15 @@
 #
 # Note: a system reboot is needed to apply for dbus as 'unit dbus.service may be requested by dependency only (it is configured to refuse manual start/stop).'
 # Exposure 9.6 -> 3.0
+# https://github.com/freedesktop/dbus/blob/master/bus/dbus.service.in
+#
+# FIXME!
+# dbus-daemon[x]: apparmor="DENIED" operation="dbus_method_call"  bus="system" path="/org/freedesktop/DBus" interface="org.freedesktop.DBus" member="Hello" mask="send" name="org.freedesktop.DBus" pid=264193 label="avahi-daemon" peer_label="unconfined" info="Read-only file system"
+# dbus-daemon[x]: apparmor="DENIED" operation="dbus_method_call"  bus="system" path="/org/freedesktop/DBus" interface="org.freedesktop.DBus" member="Hello" name=":not.active.yet" mask="receive" label="unconfined" peer_pid=264193 peer_label="avahi-daemon" peer_info="Read-only file system"
+# https://lists.launchpad.net/touch-packages/msg75859.html
+# https://apparmor.narkive.com/MX3CsJHj/profile-firefox-org-mozilla-firefox-and-dbus-bind-denied
+# https://gitlab.apertis.org/alee/didcot/-/blob/apertis/v2021dev1/debian/usr.bin.didcot
+# gdbus introspect --system -d org.freedesktop.DBus -o /org/freedesktop/DBus
 [Service]
 ##############
 # Networking #
@@ -25,7 +34,8 @@ IPAccounting=yes
 #  SystemCallFilter=~@mount.
 
 ProtectHome=yes
-ProtectSystem=strict
+# ProtectSystem=strict
+ProtectSystem=full
 {% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
 ProtectProc=ptraceable
 {% endif %}
