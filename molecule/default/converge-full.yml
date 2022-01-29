@@ -59,5 +59,8 @@
       - { t: iio-sensor-proxy }
       - { t: fwupd }
       - { t: walinuxagent }
+      - { t: phpV-fpm, dstunit: php7.4-fpm }
+      - { t: phpV-fpm, dstunit: php8.0-fpm }
+      - { t: phpV-fpm, dstunit: php8.1-fpm }
   roles:
     - juju4.harden_systemd
