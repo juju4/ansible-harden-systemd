@@ -42,7 +42,12 @@ ProtectControlGroups=true
 LockPersonality=true
 RestrictRealtime=true
 RestrictNamespaces=yes
+ProtectKernelLogs=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int > 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+%}
 RestrictNamespaces=~CLONE_NEWCGROUP CLONE_NEWIPC CLONE_NEWNET CLONE_NEWPID
+%}
 RestrictSUIDSGID=yes
 MemoryDenyWriteExecute=yes
 
