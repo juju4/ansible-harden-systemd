@@ -1,8 +1,11 @@
-# omsagent
-# default exposure score 9.1 
+{{ ansible_managed | comment }}
+#
+# /etc/systemd/system/omsagent-GUID.service.d/omsagent.conf
+#
+# Security Exposure: 9.1 -> ?
 #
 [Service]
-#User=omsagent
+# User=omsagent
 
 # Hardening
 
@@ -83,13 +86,16 @@ IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16 168.63.1
 # When system call is disallowed, return error code instead of killing process
 SystemCallErrorNumber=EPERM
 
-CPUQuota=80%
+CPUQuota=50%
 MemoryLimit=4G
 
-# RHEL8.5 not supported
-#ProtectKernelLogs=yes
-#ProtectHostname=yes
-#ProtectClock=yes
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+%}
+ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+{% endif %}
 
 # Testing
 # ReadWritePaths=
