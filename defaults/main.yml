@@ -2,43 +2,45 @@
 
 # defaults Ubuntu 20.04
 harden_systemd_list:
-  - accounts-daemon
-  - dbus
-  - polkit
-  - rsync
-  - rsyslog
+  - { t: accounts-daemon }
+  - { t: dbus }
+  - { t: polkit }
+  - { t: rsync }
+  - { t: rsyslog }
   # defaults Ubuntu 21.04, does not exist on 18.04
-  # - packagekit
+  # - { t: packagekit }
   # cloud agents
-  # - do-agent
-  # - omi
-  # - walinuxagent
+  # - { t: do-agent }
+  # - { t: omi }
+  # - { t: walinuxagent }
 
 # Ubuntu: service is disabled by default
 harden_systemd_rsync_enable: false
 
 ## if Centos8
 # harden_systemd_list:
-#  - dbus
-#  - polkit
-#  - rsyslog
-#  - packagekit
-#  - NetworkManager
+#  - { t: dbus }
+#  - { t: polkit }
+#  - { t: rsyslog }
+#  - { t: packagekit }
+#  - { t: NetworkManager }
 #  # + cloud agents
+#  - { t: waagent }
+#  - { t: omsagent-GUID, dstunit: omsagent-<xxx> }
 
 ## if Debian Bookworm
 # harden_systemd_list:
-#  - accounts-daemon
-#  - dbus
-#  - rsync
-#  - packagekit
-#  - polkit
-#  - avahi-daemon
-#  - bluetooth
-#  - ModemManager
-#  - NetworkManager
-#  - wpa_supplicant
-#  - rsyslog
-#  - iio-sensor-proxy
-#  - fwupd
-#  - phosh?
+#  - { t: accounts-daemon }
+#  - { t: dbus }
+#  - { t: rsync }
+#  - { t: packagekit }
+#  - { t: polkit }
+#  - { t: avahi-daemon }
+#  - { t: bluetooth }
+#  - { t: ModemManager }
+#  - { t: NetworkManager }
+#  - { t: wpa_supplicant }
+#  - { t: rsyslog }
+#  - { t: iio-sensor-proxy }
+#  - { t: fwupd }
+#  - { t: phosh? }
