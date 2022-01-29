@@ -46,18 +46,18 @@
       when: ansible_distribution == "Ubuntu"
   vars:
     harden_systemd_list:
-      - accounts-daemon
-      - dbus
-      - rsync
-      - packagekit
-      - polkit
-      - avahi-daemon
-      - bluetooth
-      - ModemManager
-      - wpa_supplicant
-      - rsyslog
-      - iio-sensor-proxy
-      - fwupd
-      - walinuxagent
+      - { t: accounts-daemon }
+      - { t: dbus }
+      - { t: rsync }
+      - { t: packagekit }
+      - { t: polkit }
+      - { t: avahi-daemon }
+      - { t: bluetooth }
+      - { t: ModemManager }
+      - { t: wpa_supplicant }
+      - { t: rsyslog }
+      - { t: iio-sensor-proxy }
+      - { t: fwupd }
+      - { t: walinuxagent }
   roles:
     - juju4.harden_systemd
