@@ -1,0 +1,95 @@
+# omsagent
+# default exposure score 9.1 
+#
+[Service]
+#User=omsagent
+
+# Hardening
+
+# NOK
+# omsbaseline[221506]: Failed to determine list of available sudo commands: failed to execute /usr/bin/sudo [-l] [err:exit status 1] [out:]
+#NoNewPrivileges=yes
+#RestrictSUIDSGID=yes
+#PrivateDevices=yes
+# PrivateUsers=yes
+#ProtectKernelTunables=true
+#ProtectKernelModules=yes
+#LockPersonality=true
+#RestrictRealtime=true
+#RestrictNamespaces=yes
+#RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+#SystemCallArchitectures=native
+#SystemCallFilter=~@debug @mount @cpu-emulation @resources
+#SystemCallFilter=~@debug @mount @cpu-emulation
+#SystemCallFilter=~@mount @cpu-emulation
+#SystemCallFilter=~@mount
+#SystemCallFilter=~@obsolete
+#SystemCallFilter=~@swap
+#SystemCallFilter=~@clock
+# (code=exited, status=1/FAILURE)
+# ProtectSystem=strict
+# systemd-coredump[290607]: Process 290602 (pgrep) of user 987 dumped core.
+#InaccessiblePaths=/proc
+#MemoryDenyWriteExecute=yes
+
+# OK
+PrivateTmp=true
+ProtectHome=yes
+ProtectSystem=yes
+ProtectControlGroups=true
+# [error]: Error for Request-ID: xxx Error: Net::HTTP.Post raises exception: Errno::ENETUNREACH, 'Failed to open TCP connection to GUID.ods.opinsights.azure.com:443 (Network is unreachable - connect(2) for "168.63.129.16" port 53)'
+# PrivateNetwork=yes
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+CapabilityBoundingSet=~CAP_SYS_PTRACE
+CapabilityBoundingSet=~CAP_CHOWN CAP_FSETID CAP_SETFCAP
+CapabilityBoundingSet=~CAP_DAC_* CAP_FOWNER CAP_IPC_OWNER
+CapabilityBoundingSet=~CAP_NET_ADMIN
+
+CapabilityBoundingSet=~CAP_SYS_TIME
+
+CapabilityBoundingSet=~CAP_AUDIT_*
+CapabilityBoundingSet=~CAP_KILL
+CapabilityBoundingSet=~CAP_MKNOD
+CapabilityBoundingSet=~CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=~CAP_NET_BROADCAST
+CapabilityBoundingSet=~CAP_NET_RAW
+CapabilityBoundingSet=~CAP_SYSLOG
+CapabilityBoundingSet=~CAP_SYS_NICE
+CapabilityBoundingSet=~CAP_SYS_RESOURCE
+
+CapabilityBoundingSet=~CAP_SYS_BOOT
+CapabilityBoundingSet=~CAP_LINUX_IMMUTABLE
+CapabilityBoundingSet=~CAP_IPC_LOCK
+CapabilityBoundingSet=~CAP_SYS_CHROOT
+CapabilityBoundingSet=~CAP_BLOCK_SUSPEND
+CapabilityBoundingSet=~CAP_LEASE
+CapabilityBoundingSet=~CAP_SYS_PACCT
+CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
+CapabilityBoundingSet=~CAP_WAKE_ALARM
+
+RestrictNamespaces=~CLONE_NEWUSER
+RestrictNamespaces=~CLONE_NEWCGROUP
+RestrictNamespaces=~CLONE_NEWIPC
+RestrictNamespaces=~CLONE_NEWNET
+RestrictNamespaces=~CLONE_NEWNS
+RestrictNamespaces=~CLONE_NEWPID
+RestrictNamespaces=~CLONE_NEWUTS
+
+IPAccounting=yes
+# https://docs.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
+IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16 168.63.129.16
+# IPAddressDeny=
+
+# When system call is disallowed, return error code instead of killing process
+SystemCallErrorNumber=EPERM
+
+CPUQuota=80%
+MemoryLimit=4G
+
+# RHEL8.5 not supported
+#ProtectKernelLogs=yes
+#ProtectHostname=yes
+#ProtectClock=yes
+
+# Testing
+# ReadWritePaths=
