@@ -42,7 +42,7 @@ harden_systemd_list:
   - rsyslog
   # defaults Ubuntu 21.04
   - packagekit
-  # 
+  #
   # pinephone
   # - phosh
   # non-default
