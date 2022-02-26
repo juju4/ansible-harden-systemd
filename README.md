@@ -80,6 +80,7 @@ Still not clear why some service would need eBPF.
 * https://www.freedesktop.org/software/systemd/man/systemd.exec.html
 * https://wiki.debian.org/ServiceSandboxing
 * https://github.com/krathalan/systemd-sandboxing/
+* See also: [juju4.harden_nginx](https://github.com/juju4/ansible-harden-nginx/blob/master/templates/systemd-override.conf.j2), [juju4.squid](https://github.com/juju4/ansible-squid/blob/master/templates/systemd-override.conf.j2), [juju4.tinyproxy](https://github.com/juju4/ansible-tinyproxy/blob/master/templates/systemd-override.conf.j2) and more
 
 ## License
 
