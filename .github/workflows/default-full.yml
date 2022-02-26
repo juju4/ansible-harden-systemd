@@ -86,6 +86,8 @@ jobs:
           systemctl status php8.0-fpm || true
           systemctl status php8.1-fpm || true
           systemctl status tomcat9 || true
+          systemctl status postgresql || true
+          systemctl status postgresql@12-main || true
           systemctl status --all --no-pager || true
         if: ${{ always() }}
         continue-on-error: true
@@ -113,6 +115,8 @@ jobs:
           systemctl status php8.0-fpm || true
           systemctl status php8.1-fpm || true
           systemctl status tomcat9 || true
+          systemctl status postgresql || true
+          systemctl status postgresql@12-main || true
           systemctl status --all --no-pager || true
         if: ${{ always() }}
         continue-on-error: true
