@@ -1,19 +1,19 @@
 ---
 
 - name: Ensure systemd package is present
-  package:
+  ansible.builtin.package:
     name: systemd
     state: present
 
 - name: Ensure systemd service.d folder exists
-  file:
+  ansible.builtin.file:
     dest: "/etc/systemd/system/{{ item.dstunit | default(item.t) }}.service.d"
     state: directory
     mode: '0755'
   loop: "{{ harden_systemd_list }}"
 
 - name: Add systemd hardening options for services
-  template:
+  ansible.builtin.template:
     src: "{{ item.t }}.service.d-override.conf.j2"
     dest: "/etc/systemd/system/{{ item.dstunit | default(item.t) }}.service.d/hardening.conf"
     mode: '0644'

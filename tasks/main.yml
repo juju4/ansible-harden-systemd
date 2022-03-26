@@ -1,12 +1,12 @@
 ---
 
 - name: Ensure systemd package is present
-  package:
+  ansible.builtin.package:
     name: systemd
     state: present
 
 - name: Record initial state
-  shell: systemd-analyze security > /root/systemd-analyze-security1.out
+  ansible.builtin.shell: systemd-analyze security > /root/systemd-analyze-security1.out
   args:
     creates: /root/systemd-analyze-security1.out
   when: >
@@ -20,15 +20,15 @@
         )
 
 - name: Debug | ansible_service_mgr
-  debug: var=ansible_service_mgr verbosity=1
+  ansible.builtin.debug: var=ansible_service_mgr verbosity=1
 
 - import_tasks: systemd.yml
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Record final state
-  shell: systemd-analyze security > /root/systemd-analyze-security2.out
+  ansible.builtin.shell: systemd-analyze security > /root/systemd-analyze-security2.out
   args:
     creates: /root/systemd-analyze-security2.out
   when: >
