@@ -45,3 +45,5 @@ harden_systemd_rsync_enable: false
 #  - { t: iio-sensor-proxy }
 #  - { t: fwupd }
 #  - { t: phosh? }
+
+harden_systemd_services_restart: []

@@ -71,5 +71,24 @@
       - { t: phpV-fpm, dstunit: php8.1-fpm }
       - { t: tomcat, dstunit: tomcat9 }
       - { t: postgresql, dstunit: postgresql@ }
+    harden_systemd_services_restart:
+      - accounts-daemon
+      - dbus
+      - rsync
+      - packagekit
+      - polkit
+      - avahi-daemon
+      - bluetooth
+      - ModemManager
+      - wpa_supplicant
+      - rsyslog
+      - iio-sensor-proxy
+      - fwupd
+      - walinuxagent
+      - php7.4-fpm
+      - php8.0-fpm
+      - php8.1-fpm
+      - tomcat9
+      - postgresql@12-main
   roles:
     - juju4.harden_systemd
