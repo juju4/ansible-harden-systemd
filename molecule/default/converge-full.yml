@@ -73,7 +73,9 @@
       - { t: postgresql, dstunit: postgresql@ }
     harden_systemd_services_restart:
       - accounts-daemon
-      - dbus
+      # Failed to restart dbus.service: Operation refused, unit dbus.service may
+      # be requested by dependency only (it is configured to refuse manual start/stop)
+      # - dbus
       - rsync
       - packagekit
       - polkit
