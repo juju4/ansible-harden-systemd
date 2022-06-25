@@ -73,6 +73,15 @@
           - postgresql@10-main
       when: >
         (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 18)
+    - name: Download omsagent
+      ansible.builtin.get_url:
+        url: https://github.com/microsoft/OMS-Agent-for-Linux/releases/download/OMSAgent_v1.14.12-0/omsagent-1.14.12-0.universal.x64.sh
+        dest: /tmp/omsagent.sh
+        mode: '0755'
+    - name: Install omsagent
+      ansible.builtin.command: /tmp/omsagent.sh --install
+      args:
+        creates: /opt/microsoft/omsagent/bin/troubleshooter
   vars:
     harden_systemd_list:
       - { t: accounts-daemon }
@@ -93,6 +102,7 @@
       - { t: phpV-fpm, dstunit: php8.1-fpm }
       - { t: tomcat, dstunit: tomcat9 }
       - { t: postgresql, dstunit: postgresql@ }
+      - { t: omsagent-GUID, dstunit: omsagent-GUID }
     harden_systemd_services_restart:
       - accounts-daemon
       # Failed to restart dbus.service: Operation refused, unit dbus.service may
