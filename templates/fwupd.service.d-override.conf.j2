@@ -17,7 +17,7 @@ ProtectControlGroups=yes
 ProtectKernelModules=yes
 RestrictRealtime=yes
 ReadWritePaths=-/boot/efi -/efi/EFI -/boot/EFI
-ReadOnlyPaths=/sys/kernel/security/tpm0/binary_bios_measurements  /sys/devices/virtual/msr/msr0 /sys/devices/pci*
+ReadOnlyPaths=/sys/kernel/security/tpm0/binary_bios_measurements  /sys/devices/virtual/msr/msr0 /sys/devices/pci* /usr/libexec/fwupd
 
 ##############
 # Networking #
