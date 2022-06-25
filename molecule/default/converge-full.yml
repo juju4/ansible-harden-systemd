@@ -47,7 +47,6 @@
           - openjdk-11-jdk
           - tomcat9
           - postgresql
-          - omid
         state: present
       register: pkg_result
       until: pkg_result is success
