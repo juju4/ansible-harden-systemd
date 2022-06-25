@@ -47,6 +47,7 @@
           - openjdk-11-jdk
           - tomcat9
           - postgresql
+          - omid
         state: present
       register: pkg_result
       until: pkg_result is success
@@ -71,6 +72,7 @@
           - php8.1-fpm
           - tomcat9
           - postgresql@10-main
+          - omid
       when: >
         (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 18)
     - name: Download omsagent
@@ -102,6 +104,7 @@
       - { t: phpV-fpm, dstunit: php8.1-fpm }
       - { t: tomcat, dstunit: tomcat9 }
       - { t: postgresql, dstunit: postgresql@ }
+      - { t: omi, dstunit: omid }
       - { t: omsagent-GUID, dstunit: omsagent-GUID }
     harden_systemd_services_restart:
       - accounts-daemon
@@ -124,5 +127,6 @@
       - php8.1-fpm
       - tomcat9
       - postgresql@12-main
+      - omid
   roles:
     - juju4.harden_systemd
