@@ -1,21 +1,27 @@
 {{ ansible_managed | comment }}
 #
-# /etc/systemd/system/phpV-fpm.service.d/php-fpm.conf
+# /etc/systemd/system/tomcat9.service.d/security.conf
 #
-# https://packages.debian.org/sid/php-fpm
+# Existing exposure level: 8.5 (ubuntu 20.04) -> 1.9
 [Service]
-# Run fully unprivileged
-#User={% if ansible_os_family == 'RedHat' %}nginx{% else %}www-data{% endif %}
 
-#Group={% if ansible_os_family == 'RedHat' %}nginx{% else %}www-data{% endif %}
-
+# Existing from tomcat9 package on Ubuntu 20.04
+# Security
+User=tomcat
+Group=tomcat
+PrivateTmp=yes
+NoNewPrivileges=true
+CacheDirectory=tomcat9
+CacheDirectoryMode=750
+ProtectSystem=strict
+ReadWritePaths=/etc/tomcat9/Catalina/
+ReadWritePaths=/var/lib/tomcat9/webapps/
+ReadWritePaths=/var/log/tomcat9/
+# if running on privileged network port
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 # Reduce Attack Surface
-NoNewPrivileges=yes
-PrivateTmp=true
 ProtectHome=yes
-ProtectSystem=yes
-# ProtectSystem=strict
 {% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
 ProtectProc=noaccess
 {% endif %}
@@ -27,7 +33,7 @@ DeviceAllow=
 
 UMask=077
 
-InaccessiblePaths=/proc
+# InaccessiblePaths=/proc
 
 ProtectKernelTunables=true
 ProtectKernelModules=yes
@@ -50,13 +56,16 @@ ProtectKernelLogs=yes
 RestrictNamespaces=~CLONE_NEWCGROUP CLONE_NEWIPC CLONE_NEWNET CLONE_NEWPID
 {% endif %}
 RestrictSUIDSGID=yes
-MemoryDenyWriteExecute=yes
+# MemoryDenyWriteExecute=yes
 
-PrivateNetwork=yes
+# PrivateNetwork=yes
 RestrictAddressFamilies=AF_UNIX
 RestrictAddressFamilies=~AF_INET AF_INET6 AF_NETLINK AF_PACKET
 
 IPAccounting=yes
+# Tomcat should not be exposed directly to Internet
+# Ideally behind a reverse-proxy, load balancer or WAF (or all of them)
+# And if connecting to Internet, through an internal proxy
 IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16
 
 CapabilityBoundingSet=~CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_DAC_READ_SEARCH
@@ -65,7 +74,7 @@ CapabilityBoundingSet=~CAP_SYS_PTRACE
 CapabilityBoundingSet=~CAP_DAC_* CAP_FOWNER CAP_IPC_OWNER
 CapabilityBoundingSet=~CAP_NET_ADMIN
 CapabilityBoundingSet=~CAP_KILL
-CapabilityBoundingSet=~CAP_NET_BIND_SERVICE CAP_NET_BROADCAST
+CapabilityBoundingSet=~CAP_NET_BROADCAST
 CapabilityBoundingSet=~CAP_SYS_NICE CAP_SYS_RESOURCE
 CapabilityBoundingSet=~CAP_SYS_BOOT
 CapabilityBoundingSet=~CAP_LINUX_IMMUTABLE
@@ -75,9 +84,9 @@ CapabilityBoundingSet=~CAP_LEASE
 CapabilityBoundingSet=~CAP_SYS_PACCT
 CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
 CapabilityBoundingSet=~CAP_SYS_ADMIN
-# CapabilityBoundingSet=~CAP_SETUID CAP_SETGID
+CapabilityBoundingSet=~CAP_SETUID CAP_SETGID
 CapabilityBoundingSet=~CAP_SETPCAP
-# CapabilityBoundingSet=~CAP_CHOWN
+CapabilityBoundingSet=~CAP_CHOWN
 CapabilityBoundingSet=~CAP_FSETID CAP_SETFCAP
 CapabilityBoundingSet=~CAP_NET_RAW
 CapabilityBoundingSet=~CAP_IPC_LOCK
@@ -87,14 +96,14 @@ CapabilityBoundingSet=~CAP_IPC_LOCK
         )
 %}
 {% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int > 18) %}
-SystemCallFilter=@system-service @privileged
+SystemCallFilter=@system-service
 {% endif %}
-SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @resources @reboot @swap @raw-io @module
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @resources @reboot @swap @raw-io @module @privileged
 # When system call is disallowed, return error code instead of killing process
 SystemCallErrorNumber=EPERM
 {% endif %}
 SystemCallArchitectures=native
 
-CPUShares={{ php_fpm_cgroups_cpushares | default('1024') }}
-CPUQuota={{ php_fpm_cgroups_cpuquota | default('80%') }}
-MemoryLimit={{ php_fpm_cgroups_memorylimit | default('8G') }}
+CPUShares={{ tomcat_cgroups_cpushares | default('1024') }}
+CPUQuota={{ tomcat_cgroups_cpuquota | default('80%') }}
+MemoryLimit={{ tomcat_cgroups_memorylimit | default('4G') }}
