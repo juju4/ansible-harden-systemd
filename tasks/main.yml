@@ -20,9 +20,12 @@
         )
 
 - name: Debug | ansible_service_mgr
-  ansible.builtin.debug: var=ansible_service_mgr verbosity=1
+  ansible.builtin.debug:
+    var: ansible_service_mgr
+    verbosity: 1
 
-- import_tasks: systemd.yml
+- name: Import systemd
+  ansible.builtin.import_tasks: systemd.yml
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
