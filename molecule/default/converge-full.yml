@@ -32,7 +32,7 @@
         update_cache: true
         cache_valid_time: 3600
       when: ansible_os_family == "Debian"
-    - name: Extra daemons
+    - name: Ubuntu | Extra daemons
       ansible.builtin.apt:
         name:
           - accountsservice
@@ -51,7 +51,31 @@
         state: present
       register: pkg_result
       until: pkg_result is success
-      when: ansible_distribution == "Ubuntu"
+      when:
+        - ansible_distribution == "Ubuntu"
+        - ansible_distribution_major_version | int <= 22
+    - name: Ubuntu Noble | Extra daemons
+      ansible.builtin.apt:
+        name:
+          - accountsservice
+          - rsync
+          - packagekit
+          - policykit-1
+          - avahi-daemon
+          - bluetooth
+          - wpasupplicant
+          - modemmanager
+          - iio-sensor-proxy
+          - fwupd
+          - openjdk-11-jdk
+          - tomcat10
+          - postgresql
+        state: present
+      register: pkg_result
+      until: pkg_result is success
+      when:
+        - ansible_distribution == "Ubuntu"
+        - ansible_distribution_major_version | int == 24
     - name: Ubuntu Focal | Set fact
       ansible.builtin.set_fact:
         harden_systemd_services_restart:
@@ -77,6 +101,26 @@
           - postgresql@12-main
       when: >
         (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 20)
+    - name: Ubuntu Noble | Set fact
+      ansible.builtin.set_fact:
+        harden_systemd_services_restart:
+          - accounts-daemon
+          - rsync
+          - packagekit
+          - polkit
+          - avahi-daemon
+          - bluetooth
+          - ModemManager
+          - wpa_supplicant
+          - rsyslog
+          - iio-sensor-proxy
+          - fwupd
+          - walinuxagent
+          - php8.3-fpm
+          - tomcat10
+          - postgresql@16-main
+      when: >
+        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 24)
     - name: Ubuntu Bionic | Set fact
       ansible.builtin.set_fact:
         harden_systemd_services_restart:
