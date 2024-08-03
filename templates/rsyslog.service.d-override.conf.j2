@@ -23,7 +23,7 @@ DynamicUser=false
 
 UMask=077
 
-ReadWritePaths=/var/log
+ReadWritePaths=/var/log /run/systemd/journal/syslog
 ReadOnlyPaths=/proc/kmsg
 # InaccessiblePaths=/proc
 {% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 7) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
@@ -47,7 +47,7 @@ PrivateNetwork=yes
 RestrictAddressFamilies=AF_UNIX
 # If using remote syslog, likely required
 #RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
-RestrictAddressFamilies=~AF_NETLINK AF_PACKET
+RestrictAddressFamilies=~AF_NETLINK AF_PACKET AF_UNIX
 
 IPAccounting=yes
 IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16
