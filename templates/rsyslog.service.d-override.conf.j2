@@ -23,7 +23,7 @@ DynamicUser=false
 
 UMask=077
 
-ReadWritePaths=/var/log /run/systemd/journal/syslog
+ReadWritePaths=/var/log /run/systemd/journal/syslog run/systemd/journal/dev-log run/systemd/journal/syslog run/systemd/notify run/systemd/userdb/io.systemd.DynamicUser
 ReadOnlyPaths=/proc/kmsg
 # InaccessiblePaths=/proc
 {% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 7) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
