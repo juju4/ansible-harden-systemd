@@ -8,6 +8,32 @@
 # Hardening
 # Warning! Test to your context
 NoNewPrivileges=yes
+{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 24 %}
+# PrivateTmp=true
+# ProtectHome=true
+# ProtectSystem=true
+# ProtectProc=noaccess
+# PrivateDevices=yes
+UMask=077
+# ReadWritePaths=/var/log /run/systemd/journal/syslog /run/systemd/journal/dev-log /run/systemd/journal/syslog /run/systemd/notify /run/systemd/userdb/io.systemd.DynamicUser
+# ReadOnlyPaths=/proc/kmsg
+# InaccessiblePaths=/proc
+# ProtectKernelTunables=true
+# ProtectKernelModules=yes
+# ProtectKernelLogs=yes
+ProtectHostname=yes
+ProtectClock=yes
+# ProtectControlGroups=true
+# LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=yes
+RestrictSUIDSGID=yes
+MemoryDenyWriteExecute=yes
+
+# PrivateNetwork=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictAddressFamilies=~AF_NETLINK AF_PACKET
+{% else %}
 PrivateTmp=true
 ProtectHome=true
 ProtectSystem=true
@@ -23,7 +49,7 @@ DynamicUser=false
 
 UMask=077
 
-ReadWritePaths=/var/log /run/systemd/journal/syslog run/systemd/journal/dev-log run/systemd/journal/syslog run/systemd/notify run/systemd/userdb/io.systemd.DynamicUser
+ReadWritePaths=/var/log /run/systemd/journal/syslog /run/systemd/journal/dev-log /run/systemd/journal/syslog /run/systemd/notify /run/systemd/userdb/io.systemd.DynamicUser
 ReadOnlyPaths=/proc/kmsg
 # InaccessiblePaths=/proc
 {% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 7) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
@@ -48,6 +74,8 @@ RestrictAddressFamilies=AF_UNIX
 # If using remote syslog, likely required
 #RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictAddressFamilies=~AF_NETLINK AF_PACKET
+{% endif %}
+{% endif %}
 
 IPAccounting=yes
 IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16
@@ -71,11 +99,10 @@ CapabilityBoundingSet=~CAP_SYS_PACCT
 CapabilityBoundingSet=~CAP_SYS_TTY_CONFIG
 CapabilityBoundingSet=~CAP_SYS_ADMIN
 # CapabilityBoundingSet=~CAP_SETUID CAP_SETGID CAP_SETPCAP
-CapabilityBoundingSet=~CAP_CHOWN CAP_FSETID CAP_SETFCAP
+CapabilityBoundingSet=~CAP_FSETID CAP_SETFCAP
 CapabilityBoundingSet=~CAP_NET_RAW
 CapabilityBoundingSet=~CAP_IPC_LOCK
 
-{% endif %}
 {% if not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
         ) and
