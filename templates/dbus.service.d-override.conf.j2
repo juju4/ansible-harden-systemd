@@ -118,6 +118,6 @@ RestrictSUIDSGID=yes
 SystemCallFilter=~@raw-io
 SystemCallArchitectures=native
 
-CPUShares={{ dbus_cgroups_cpushares | default('1024') }}
+CPUWeight={{ dbus_cgroups_cpushares | default('1024') }}
 CPUQuota={{ dbus_cgroups_cpuquota | default('20%') }}
-MemoryLimit={{ dbus_cgroups_memorylimit | default('1G') }}
+MemoryMax={{ dbus_cgroups_memorylimit | default('1G') }}

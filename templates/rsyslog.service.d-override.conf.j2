@@ -119,7 +119,7 @@ SystemCallErrorNumber=EPERM
 {% endif %}
 {% endif %}
 {% if rsyslog_cgroups_restriction_enable is defined and rsyslog_cgroups_restriction_enable|bool %}
-CPUShares={{ rsyslog_cgroups_cpushares | default('1024') }}
+CPUWeight={{ rsyslog_cgroups_cpushares | default('1024') }}
 CPUQuota={{ rsyslog_cgroups_cpuquota | default('40%') }}
-MemoryLimit={{ rsyslog_cgroups_memorylimit | default('4G') }}
+MemoryMax={{ rsyslog_cgroups_memorylimit | default('4G') }}
 {% endif %}

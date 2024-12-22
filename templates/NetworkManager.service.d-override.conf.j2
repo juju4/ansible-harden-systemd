@@ -120,6 +120,6 @@ SystemCallFilter=~@privileged
 {% endif %}
 SystemCallArchitectures=native
 
-CPUShares={{ NetworkManager_cgroups_cpushares | default('1024') }}
+CPUWeight={{ NetworkManager_cgroups_cpushares | default('1024') }}
 CPUQuota={{ NetworkManager_cgroups_cpuquota | default('20%') }}
-MemoryLimit={{ NetworkManager_cgroups_memorylimit | default('1G') }}
+MemoryMax={{ NetworkManager_cgroups_memorylimit | default('1G') }}

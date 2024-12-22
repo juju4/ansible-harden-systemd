@@ -86,6 +86,6 @@ SystemCallFilter=@system-service
 SystemCallFilter=~@resources @privileged
 SystemCallArchitectures=native
 
-CPUShares={{ bluetooth_cgroups_cpushares | default('1024') }}
+CPUWeight={{ bluetooth_cgroups_cpushares | default('1024') }}
 CPUQuota={{ bluetooth_cgroups_cpuquota | default('20%') }}
-MemoryLimit={{ bluetooth_cgroups_memorylimit | default('1G') }}
+MemoryMax={{ bluetooth_cgroups_memorylimit | default('1G') }}

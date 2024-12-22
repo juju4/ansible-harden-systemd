@@ -106,6 +106,6 @@ SystemCallFilter=@system-service @privileged @mount
 SystemCallFilter=~@clock @debug @resources @reboot @swap @module
 SystemCallArchitectures=native
 
-CPUShares={{ rsync_cgroups_cpushares | default('1024') }}
+CPUWeight={{ rsync_cgroups_cpushares | default('1024') }}
 CPUQuota={{ rsync_cgroups_cpuquota | default('20%') }}
-MemoryLimit={{ rsync_cgroups_memorylimit | default('1G') }}
+MemoryMax={{ rsync_cgroups_memorylimit | default('1G') }}

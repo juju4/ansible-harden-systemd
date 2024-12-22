@@ -114,6 +114,6 @@ SystemCallFilter=~@mount @debug @mount @reboot @swap @raw-io @clock @module @obs
 {% endif %}
 SystemCallArchitectures=native
 
-CPUShares={{ fwupd_cgroups_cpushares | default('1024') }}
+CPUWeight={{ fwupd_cgroups_cpushares | default('1024') }}
 CPUQuota={{ fwupd_cgroups_cpuquota | default('20%') }}
-MemoryLimit={{ fwupd_cgroups_memorylimit | default('1G') }}
+MemoryMax={{ fwupd_cgroups_memorylimit | default('1G') }}

@@ -88,7 +88,7 @@ IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16 168.63.1
 SystemCallErrorNumber=EPERM
 
 CPUQuota=50%
-MemoryLimit=4G
+MemoryMax=4G
 
 {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
       (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )

@@ -95,6 +95,6 @@ SystemCallErrorNumber=EPERM
 {% endif %}
 SystemCallArchitectures=native
 
-CPUShares={{ php_fpm_cgroups_cpushares | default('1024') }}
+CPUWeight={{ php_fpm_cgroups_cpushares | default('1024') }}
 CPUQuota={{ php_fpm_cgroups_cpuquota | default('80%') }}
-MemoryLimit={{ php_fpm_cgroups_memorylimit | default('8G') }}
+MemoryMax={{ php_fpm_cgroups_memorylimit | default('8G') }}
