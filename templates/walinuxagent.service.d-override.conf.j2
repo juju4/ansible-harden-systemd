@@ -14,7 +14,9 @@ PrivateTmp=true
 ProtectHome=yes
 ProtectSystem=yes
 # ProtectSystem=strict
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
+      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
+%}
 ProtectProc=noaccess
 {% endif %}
 
@@ -30,13 +32,9 @@ UMask=077
 InaccessiblePaths=/proc
 ProtectKernelTunables=true
 ProtectKernelModules=yes
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
-%}
 ProtectKernelLogs=yes
 ProtectHostname=yes
 ProtectClock=yes
-{% endif %}
 
 ProtectControlGroups=true
 LockPersonality=true
@@ -76,23 +74,15 @@ CapabilityBoundingSet=~CAP_IPC_LOCK
 
 {% if not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
-        ) and
-      not (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int < 8) %}
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or
-      (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+        )
 %}
 SystemCallFilter=@system-service
 {% endif %}
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
 # SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @privileged @resources
 SystemCallFilter=~@debug @mount @cpu-emulation @resources
 SystemCallArchitectures=native
 # When system call is disallowed, return error code instead of killing process
 SystemCallErrorNumber=EPERM
-
-{% endif %}
-{% endif %}
 
 CPUQuota=50%
 MemoryMax=4G

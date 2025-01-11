@@ -32,7 +32,9 @@ IPAccounting=yes
 ###############
 
 #ProtectSystem=strict
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
+      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
+%}
 ProtectProc=ptraceable
 {% endif %}
 
@@ -57,8 +59,8 @@ ProtectProc=ptraceable
 
 ProtectKernelTunables=yes
 {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
 %}
 ProtectKernelLogs=yes
 ProtectHostname=yes
@@ -105,9 +107,9 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8 ) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+{% if not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+        )
 %}
 SystemCallFilter=@system-service @resources @privileged
 SystemCallFilter=~@mount @debug @mount @reboot @swap @raw-io @clock @module @obsolete

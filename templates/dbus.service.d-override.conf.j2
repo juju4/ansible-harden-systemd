@@ -3,7 +3,7 @@
 # /etc/systemd/system/dbus.service.d/hardening.conf
 #
 # Note: a system reboot is needed to apply for dbus as 'unit dbus.service may be requested by dependency only (it is configured to refuse manual start/stop).'
-# Exposure 9.6 -> 3.0
+# Exposure 9.6 -> 2.8
 # https://github.com/freedesktop/dbus/blob/master/bus/dbus.service.in
 #
 # FIXME!
@@ -63,6 +63,7 @@ PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
+      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11) or
       (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
 %}
 ProtectKernelLogs=yes
@@ -76,8 +77,9 @@ ProtectClock=yes
 
 UMask=077
 
+# dbus-daemon[4984]: Failed to start message bus: Failed to drop capabilities: Operation not permitted
 # Preparation of eBPF accounting maps failed: Operation not permitted?
-AmbientCapabilities=CAP_BPF CAP_PERFMON
+# AmbientCapabilities=CAP_BPF CAP_PERFMON
 CapabilityBoundingSet=~CAP_AUDIT_CONTROL CAP_AUDIT_READ CAP_DAC_READ_SEARCH
 CapabilityBoundingSet=~CAP_SYS_RAWIO
 CapabilityBoundingSet=~CAP_SYS_PTRACE
@@ -112,10 +114,8 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
-#SystemCallFilter=@system-service
-#SystemCallFilter=~@resources @privileged
-#SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @resources @clock @swap @reboot @module
-SystemCallFilter=~@raw-io
+SystemCallFilter=@system-service
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @resources @clock @swap @raw-io @reboot @module
 SystemCallArchitectures=native
 
 CPUWeight={{ dbus_cgroups_cpushares | default('1024') }}

@@ -13,7 +13,9 @@ PrivateTmp=yes
 ProtectSystem=full
 # ProtectSystem=strict
 ProtectHome=yes
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
+      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
+%}
 ProtectProc=noaccess
 {% endif %}
 
@@ -28,24 +30,16 @@ InaccessiblePaths=/proc
 
 ProtectKernelTunables=true
 ProtectKernelModules=yes
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
-%}
 ProtectKernelLogs=yes
 ProtectHostname=yes
 ProtectClock=yes
-{% endif %}
 
 ProtectControlGroups=true
 LockPersonality=true
 RestrictRealtime=true
 RestrictNamespaces=yes
 ProtectKernelLogs=yes
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int > 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
-%}
-RestrictNamespaces=~CLONE_NEWCGROUP CLONE_NEWIPC CLONE_NEWNET CLONE_NEWPID
-{% endif %}
+# RestrictNamespaces=~CLONE_NEWCGROUP CLONE_NEWIPC CLONE_NEWNET CLONE_NEWPID
 RestrictSUIDSGID=yes
 MemoryDenyWriteExecute=yes
 RemoveIPC=yes
@@ -86,16 +80,14 @@ CapabilityBoundingSet=~CAP_NET_RAW
 CapabilityBoundingSet=~CAP_IPC_LOCK
 
 {% if not (ansible_virtualization_type is defined and
-          ansible_virtualization_type == "docker"
+          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
         )
 %}
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int > 18) %}
 SystemCallFilter=@system-service
 {% endif %}
 SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @resources @reboot @swap @raw-io @module @privileged
 # When system call is disallowed, return error code instead of killing process
 SystemCallErrorNumber=EPERM
-{% endif %}
 SystemCallArchitectures=native
 
 CPUWeight={{ tomcat_cgroups_cpushares | default('1024') }}

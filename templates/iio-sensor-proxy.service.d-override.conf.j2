@@ -21,7 +21,9 @@ IPAccounting=yes
 IPAddressAllow=localhost link-local multicast 10.0.0.0/8 192.168.0.0/16
 # IPAddressDeny=
 
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21 %}
+{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
+      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
+%}
 ProtectProc=ptraceable
 {% endif %}
 
@@ -46,8 +48,8 @@ PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11) or
+      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
 %}
 ProtectKernelLogs=yes
 ProtectHostname=yes
@@ -94,9 +96,9 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or
-      (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+{% if not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+        )
 %}
 SystemCallFilter=@system-service
 {% endif %}

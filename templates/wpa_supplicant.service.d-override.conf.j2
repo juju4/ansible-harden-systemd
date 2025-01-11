@@ -30,7 +30,7 @@ ProtectHome=yes
 ProtectSystem=full
 # ProtectSystem=strict
 {% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
 %}
 # ProtectProc=ptraceable
 {% endif %}
@@ -57,14 +57,9 @@ DeviceAllow=/dev/rfkill
 
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
-%}
 ProtectKernelLogs=yes
 ProtectHostname=yes
 ProtectClock=yes
-{% endif %}
 
 ########
 # Misc #

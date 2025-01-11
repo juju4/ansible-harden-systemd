@@ -31,16 +31,12 @@ RestrictNamespaces=yes
 RestrictSUIDSGID=yes
 MemoryDenyWriteExecute=yes
 
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
-%}
 ProtectProc=ptraceable
 ProtectKernelLogs=yes
 ProtectHostname=yes
 ProtectClock=yes
 Umask=077
 
-{% endif %}
 # WARNING Daemon Daemon No route exists to 168.63.129.16
 # ERROR Daemon Daemon /proc/net/route contains no routes
 # PrivateNetwork=yes
