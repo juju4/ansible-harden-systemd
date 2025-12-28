@@ -90,8 +90,8 @@ SystemCallErrorNumber=EPERM
 CPUQuota=50%
 MemoryMax=4G
 
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 20) or
+      (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version']|int > 8 )
 %}
 ProtectKernelLogs=yes
 ProtectHostname=yes

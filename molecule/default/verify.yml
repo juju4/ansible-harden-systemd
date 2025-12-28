@@ -12,16 +12,16 @@
       ansible.builtin.assert:
         that: svc1.stat.exists and svc1.stat.size != 0
 
-    - name: Debug | ansible_service_mgr
+    - name: Debug | ansible_facts['service_mgr']
       ansible.builtin.debug:
-        var: ansible_service_mgr
+        var: ansible_facts['service_mgr']
         verbosity: 1
 
     - name: Get service status
       ansible.builtin.command: systemctl status rsyslog
       changed_when: false
       when: >
-        ansible_service_mgr == 'systemd' and
-        not (ansible_virtualization_type is defined and
-              (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+        ansible_facts['service_mgr'] == 'systemd' and
+        not (ansible_facts['virtualization_type'] is defined and
+              (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
             )

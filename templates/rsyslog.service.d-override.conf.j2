@@ -8,7 +8,7 @@
 # Hardening
 # Warning! Test to your context
 NoNewPrivileges=yes
-{% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 24 %}
+{% if ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 24 %}
 # PrivateTmp=true
 # ProtectHome=true
 # ProtectSystem=true
@@ -38,8 +38,8 @@ RestrictAddressFamilies=~AF_NETLINK AF_PACKET
 PrivateTmp=true
 ProtectHome=true
 ProtectSystem=true
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
-      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 21) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version']|int >= 11)
 %}
 ProtectProc=noaccess
 {% endif %}
@@ -101,8 +101,8 @@ CapabilityBoundingSet=~CAP_FSETID CAP_SETFCAP
 CapabilityBoundingSet=~CAP_NET_RAW
 CapabilityBoundingSet=~CAP_IPC_LOCK
 
-{% if not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+{% if not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "lxc" or ansible_facts['virtualization_type'] == "docker")
         )
 %}
 SystemCallFilter=@system-service @privileged @resources
@@ -111,6 +111,7 @@ SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @m
 SystemCallArchitectures=native
 # When system call is disallowed, return error code instead of killing process
 SystemCallErrorNumber=EPERM
+SystemCallLog=~@system-service chroot
 
 {% if rsyslog_cgroups_restriction_enable is defined and rsyslog_cgroups_restriction_enable|bool %}
 CPUWeight={{ rsyslog_cgroups_cpushares | default('1024') }}

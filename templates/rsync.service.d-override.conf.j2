@@ -28,8 +28,8 @@
 ProtectSystem=full
 #ProtectHome=on|off|read-only
 ProtectHome=on
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 21) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_release'] == 'NA')
 %}
 ProtectProc=ptraceable
 {% endif %}
@@ -53,9 +53,9 @@ PrivateTmp=yes
 
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 ) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 20) or
+      (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version']|int > 8 ) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_release'] == 'NA')
 %}
 ProtectKernelLogs=yes
 ProtectHostname=yes
@@ -97,9 +97,9 @@ RestrictRealtime=yes
 RestrictSUIDSGID=yes
 # RemoveIPC=
 
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 8) or
-      (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 20) or
-      (ansible_distribution == 'Debian' and ansible_distribution_release == 'NA')
+{% if (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version']|int >= 8) or
+      (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version']|int >= 20) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_release'] == 'NA')
 %}
 SystemCallFilter=@system-service @privileged @mount
 {% endif %}

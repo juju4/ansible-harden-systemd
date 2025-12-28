@@ -12,26 +12,26 @@
       ansible.builtin.raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3-minimal)
       register: python3
       changed_when: "'installed' in python3.stdout"
-      when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 16)
+      when: (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] | int >= 16)
     - name: RedHat | Install python3
       ansible.builtin.raw: test -e /usr/bin/python3 || (yum install -y python3)
       register: python3
       changed_when: "'installed' in python3.stdout"
-      when: (ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 8)
+      when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] | int >= 8)
     - name: Gather Facts
       ansible.builtin.setup:
-      when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 16)
+      when: (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] | int >= 16)
     - name: Ubuntu Bionic+, Redhat 8+ | Enforce python3 for ansible
       ansible.builtin.set_fact:
-        ansible_python_interpreter: /usr/bin/python3
+        ansible_facts['python_interpreter:'] /usr/bin/python3
       when: >
-        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 16) or
-        (ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 8)
+        (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] | int >= 16) or
+        (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] | int >= 8)
     - name: Debian | Refresh apt cache
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 3600
-      when: ansible_os_family == "Debian"
+      when: ansible_facts['os_family'] == "Debian"
     - name: Ubuntu | Extra daemons
       ansible.builtin.apt:
         name:
@@ -52,8 +52,8 @@
       register: pkg_result
       until: pkg_result is success
       when:
-        - ansible_distribution == "Ubuntu"
-        - ansible_distribution_major_version | int <= 22
+        - ansible_facts['distribution'] == "Ubuntu"
+        - ansible_facts['distribution_major_version'] | int <= 22
     - name: Ubuntu Noble | Extra daemons
       ansible.builtin.apt:
         name:
@@ -74,8 +74,8 @@
       register: pkg_result
       until: pkg_result is success
       when:
-        - ansible_distribution == "Ubuntu"
-        - ansible_distribution_major_version | int == 24
+        - ansible_facts['distribution'] == "Ubuntu"
+        - ansible_facts['distribution_major_version'] | int == 24
     - name: Ubuntu Focal | Set fact
       ansible.builtin.set_fact:
         harden_systemd_services_restart:
@@ -100,7 +100,7 @@
           - tomcat9
           - postgresql@12-main
       when: >
-        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 20)
+        (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version']|int == 20)
     - name: Ubuntu Noble | Set fact
       ansible.builtin.set_fact:
         harden_systemd_services_restart:
@@ -120,7 +120,7 @@
           - tomcat10
           - postgresql@16-main
       when: >
-        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 24)
+        (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version']|int == 24)
     - name: Ubuntu Bionic | Set fact
       ansible.builtin.set_fact:
         harden_systemd_services_restart:
@@ -142,7 +142,7 @@
           - tomcat9
           - postgresql@10-main
       when: >
-        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 18)
+        (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version']|int == 18)
   vars:
     harden_systemd_list:
       - { t: accounts-daemon }

@@ -14,8 +14,8 @@ PrivateTmp=true
 ProtectHome=yes
 ProtectSystem=yes
 # ProtectSystem=strict
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
-      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 21) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version']|int >= 11)
 %}
 ProtectProc=noaccess
 {% endif %}
@@ -72,8 +72,8 @@ CapabilityBoundingSet=~CAP_CHOWN CAP_FSETID CAP_SETFCAP
 CapabilityBoundingSet=~CAP_NET_RAW
 CapabilityBoundingSet=~CAP_IPC_LOCK
 
-{% if not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+{% if not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "lxc" or ansible_facts['virtualization_type'] == "docker")
         )
 %}
 SystemCallFilter=@system-service

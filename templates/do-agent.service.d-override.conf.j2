@@ -12,8 +12,8 @@ ProtectSystem=full
 ProtectHome=yes
 
 # Warning! Test to your context
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
-      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 21) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version']|int >= 11)
 %}
 ProtectProc=noaccess
 {% endif %}
@@ -29,12 +29,12 @@ UMask=077
 ReadWritePaths=/var/log
 ReadOnlyPaths=/proc/kmsg
 # InaccessiblePaths=/proc
-{% if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int >= 7) or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 18) %}
+{% if (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version']|int >= 7) or (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version']|int >= 18) %}
 ProtectKernelTunables=true
 ProtectKernelModules=yes
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 20) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version']|int >= 11) or
+      (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version']|int > 8 )
 %}
 ProtectKernelLogs=yes
 ProtectHostname=yes
@@ -78,8 +78,8 @@ CapabilityBoundingSet=~CAP_NET_RAW
 CapabilityBoundingSet=~CAP_IPC_LOCK
 
 {% endif %}
-{% if not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+{% if not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "lxc" or ansible_facts['virtualization_type'] == "docker")
         )
 %}
 SystemCallFilter=@system-service @privileged

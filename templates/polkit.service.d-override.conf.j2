@@ -27,8 +27,8 @@ IPAccounting=yes
 
 ProtectHome=yes
 ProtectSystem=strict
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 21) or
-      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11)
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 21) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version']|int >= 11)
 %}
 ProtectProc=ptraceable
 {% endif %}
@@ -55,9 +55,9 @@ PrivateDevices=yes
 
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 11) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 20) or
+      (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version']|int >= 11) or
+      (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version']|int > 8 )
 %}
 ProtectKernelLogs=yes
 ProtectHostname=yes
@@ -106,12 +106,12 @@ RestrictSUIDSGID=yes
 # System calls #
 ################
 
-{% if (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 20) or
-      (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 8 )
+{% if (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 20) or
+      (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version']|int > 8 )
 %}
 SystemCallFilter=@system-service @resources
 SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @module @privileged
-{% elif (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 8 ) %}
+{% elif (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version']|int == 8 ) %}
 SystemCallFilter=@system-service @resources @privileged
 SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @clock @swap @reboot @module
 {% endif %}

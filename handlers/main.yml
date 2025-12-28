@@ -4,9 +4,9 @@
   ansible.builtin.systemd:
     daemon_reload: yes
   when: >
-    ansible_service_mgr == 'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] == 'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 
 - name: Restart accounts-daemon
@@ -14,9 +14,9 @@
     name: accounts-daemon
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart dbus
   ansible.builtin.service:
@@ -24,19 +24,19 @@
     state: restarted
   # Operation refused, unit dbus.service may be requested by dependency only (it is configured to refuse manual start/stop).
   when: >
-    not (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 18) and
-    ansible_service_mgr == 'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    not (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 18) and
+    ansible_facts['service_mgr'] == 'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart polkit
   ansible.builtin.service:
     name: polkit
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart rsync
   ansible.builtin.service:
@@ -44,117 +44,117 @@
     state: restarted
   when: >
     harden_systemd_rsync_enable and
-    ansible_service_mgr == 'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] == 'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart rsyslog
   ansible.builtin.service:
     name: rsyslog
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart packagekit
   ansible.builtin.service:
     name: packagekit
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart phosh
   ansible.builtin.service:
     name: phosh
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart avahi-daemon
   ansible.builtin.service:
     name: avahi-daemon
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart bluetooth
   ansible.builtin.service:
     name: bluetooth
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart iio-sensor-proxy
   ansible.builtin.service:
     name: iio-sensor-proxy
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart ModemManager
   ansible.builtin.service:
     name: ModemManager
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart NetworkManager
   ansible.builtin.service:
     name: NetworkManager
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart wpa_supplicant
   ansible.builtin.service:
     name: wpa_supplicant
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart do-agent
   ansible.builtin.service:
     name: do-agent
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart omi
   ansible.builtin.service:
     name: omi
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 - name: Restart walinuxagent
   ansible.builtin.service:
     name: walinuxagent
     state: restarted
   when: >
-    ansible_service_mgr =:  'systemd' and
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+    ansible_facts['service_mgr'] =:  'systemd' and
+    not (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker" or ansible_facts['virtualization_type'] == "containerd")
         )
 
 - name: Restart services
