@@ -10,7 +10,6 @@
         dest: "/etc/systemd/system/{{ dstunit | default(t) }}.service.d"
         state: directory
         mode: '0755'
-      loop: "{{ harden_systemd_list }}"
 
     - name: Add systemd hardening options for services
       ansible.builtin.template:
@@ -42,7 +41,6 @@
         dest: "/etc/systemd/system/{{ dstunit | default(t) }}.service.d"
         state: directory
         mode: '0755'
-      loop: "{{ harden_systemd_list }}"
 
     - name: Add systemd hardening options for services
       ansible.builtin.template:
@@ -57,7 +55,6 @@
         dest: "/etc/systemd/system/{{ dstunit | default(t) }}.service.d"
         state: directory
         mode: '0755'
-      loop: "{{ harden_systemd_list }}"
 
     - name: Add systemd hardening options for services
       ansible.builtin.template:
@@ -67,7 +64,6 @@
       notify:
         - Reload systemd
         - Restart services
-      loop: "{{ harden_systemd_list }}"
     - name: Import immutable
       ansible.builtin.import_tasks: immutable.yml
       vars:
