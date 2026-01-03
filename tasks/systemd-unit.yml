@@ -2,8 +2,6 @@
 # vars: dstunit, t
 
 - name: Systemd
-  when:
-    - ansible_facts['service_mgr'] == 'systemd' or ansible_facts['os_family'] == 'RedHat'
   block:
     - name: Ensure systemd service.d folder exists
       ansible.builtin.file:
