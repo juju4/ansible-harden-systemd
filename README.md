@@ -82,6 +82,7 @@ Still not clear why some service would need eBPF.
 * https://github.com/krathalan/systemd-sandboxing/
 * See also: [juju4.harden_nginx](https://github.com/juju4/ansible-harden-nginx/blob/master/templates/systemd-override.conf.j2), [juju4.harden_apache](https://github.com/juju4/ansible-harden-apache/blob/master/templates/systemd-override.conf.j2), [juju4.squid](https://github.com/juju4/ansible-squid/blob/master/templates/systemd-override.conf.j2), [juju4.tinyproxy](https://github.com/juju4/ansible-tinyproxy/blob/master/templates/systemd-override.conf.j2) and more
 * [Hardening OpenLDAP on Linux with AppArmor and systemd, 2018](https://openldap.org/conf/odd-tuebingen-2018/Michael1.pdf), [ae-slapd.service.j2](https://code.stroeder.com/AE-DIR/ansible-ae-dir-server/src/branch/main/templates/systemd/ae-slapd.service.j2), [defaults aedir_systemd_hardening](https://code.stroeder.com/AE-DIR/ansible-ae-dir-server/src/branch/main/defaults/main.yml#L161)
+* [Linux speedrun: systemd, 2025](https://michaelboelen.com/presentations/): SystemCallLog
 
 ## License
 
