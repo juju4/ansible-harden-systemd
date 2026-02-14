@@ -4,11 +4,11 @@
   hosts: hardens
   tasks:
 
-    - name: Get /etc/systemd/system/rsyslog.service.d/hardening.conf stats
+    - name: Get /etc/systemd/system/dbus.service.d/hardening.conf stats
       ansible.builtin.stat:
-        path: /etc/systemd/system/rsyslog.service.d/hardening.conf
+        path: /etc/systemd/system/dbus.service.d/hardening.conf
       register: svc1
-    - name: Validate /etc/systemd/system/rsyslog.service.d/hardening.conf exists
+    - name: Validate /etc/systemd/system/dbus.service.d/hardening.conf exists
       ansible.builtin.assert:
         that: svc1.stat.exists and svc1.stat.size != 0
 
@@ -18,7 +18,7 @@
         verbosity: 1
 
     - name: Get service status
-      ansible.builtin.command: systemctl status rsyslog
+      ansible.builtin.command: systemctl status dbus
       changed_when: false
       when: >
         ansible_facts['service_mgr'] == 'systemd' and
