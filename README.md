@@ -1,7 +1,7 @@
-[![Actions Status - Master](https://github.com/juju4/ansible-harden-systemd/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-harden-systemd/actions?query=branch%3Amaster)
-[![Actions Status - Devel](https://github.com/juju4/ansible-harden-systemd/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-harden-systemd/actions?query=branch%3Adevel)
-
 # harden-systemd ansible role
+
+[![Actions Status - Main](https://github.com/juju4/ansible-harden-systemd/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-harden-systemd/actions?query=branch%3Amain)
+[![Actions Status - Devel](https://github.com/juju4/ansible-harden-systemd/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-harden-systemd/actions?query=branch%3Adevel)
 
 Enforce stricter settings for services/daemons using various systemd security options.
 This mostly focused on network services.
